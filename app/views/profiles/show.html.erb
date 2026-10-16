@@ -1,0 +1,22 @@
+<h1>自分のプロフィール</h1>
+
+<% if notice.present? %>
+  <p><%= notice %></p>
+<% end %>
+
+<% if alert.present? %>
+  <p><%= alert %></p>
+<% end %>
+
+<p>ユーザーID：<%= @current_user.uid %></p>
+
+<h2>自己紹介</h2>
+<%= simple_format(@profile.message) %>
+
+<p><%= link_to "編集", edit_profile_path %></p>
+
+<%= button_to "プロフィールを削除", profile_path,
+      method: :delete,
+      data: { turbo_confirm: "プロフィールを削除しますか？" } %>
+
+<p><%= link_to "ツイート一覧へ", root_path %></p>

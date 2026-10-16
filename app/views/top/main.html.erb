@@ -11,6 +11,8 @@
 <% if @current_user %>
   <p>ログイン中：<%= @current_user.uid %></p>
 
+  <p><%= link_to "自分のプロフィール", profile_path %></p>
+
   <%= button_to "ログアウト", logout_path, method: :delete %>
 
   <h2>ツイートする</h2>
@@ -42,7 +44,8 @@
   <div>
     <p>投稿者：<%= e.user&.uid || "削除済みユーザー" %></p>
     <p><%= e.message %></p>
-        <% if @current_user %>
+
+    <% if @current_user %>
       <p>
         いいね：<%= e.likes.count %>
 
@@ -55,6 +58,7 @@
         <% end %>
       </p>
     <% end %>
+
     <% if @current_user && e.user_id == @current_user.id %>
       <%= button_to "削除", tweet_path(e),
             method: :delete,

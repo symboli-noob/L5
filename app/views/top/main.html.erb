@@ -1,0 +1,65 @@
+<h1>つぶやきアプリ</h1>
+
+<% if notice.present? %>
+  <p><%= notice %></p>
+<% end %>
+
+<% if alert.present? %>
+  <p><%= alert %></p>
+<% end %>
+
+<% if @current_user %>
+  <p>ログイン中：<%= @current_user.uid %></p>
+
+  <%= button_to "ログアウト", logout_path, method: :delete %>
+
+  <h2>ツイートする</h2>
+
+  <%= form_with model: Tweet.new do |form| %>
+    <p>
+      <%= form.label :message, "本文" %><br>
+      <%= form.text_area :message, rows: 3, required: true %>
+    </p>
+
+    <%= form.submit "投稿" %>
+  <% end %>
+<% else %>
+  <p>
+    <%= link_to "ログイン", login_path %>
+    <%= link_to "ユーザー登録", new_user_path %>
+  </p>
+<% end %>
+
+<p><%= link_to "ユーザー一覧", users_path %></p>
+
+<h2>ツイート一覧</h2>
+
+<% if @tweets.empty? %>
+  <p>まだ投稿がありません。</p>
+<% end %>
+
+<% @tweets.each do |e| %>
+  <div>
+    <p>投稿者：<%= e.user&.uid || "削除済みユーザー" %></p>
+    <p><%= e.message %></p>
+        <% if @current_user %>
+      <p>
+        いいね：<%= e.likes.count %>
+
+        <% if e.likes.exists?(user_id: @current_user.id) %>
+          <%= link_to "いいね削除", like_path(e),
+                data: { turbo_method: :delete } %>
+        <% else %>
+          <%= link_to "いいね", likes_path(tweet_id: e.id),
+                data: { turbo_method: :post } %>
+        <% end %>
+      </p>
+    <% end %>
+    <% if @current_user && e.user_id == @current_user.id %>
+      <%= button_to "削除", tweet_path(e),
+            method: :delete,
+            data: { turbo_confirm: "この投稿を削除しますか？" } %>
+    <% end %>
+  </div>
+  <hr>
+<% end %>

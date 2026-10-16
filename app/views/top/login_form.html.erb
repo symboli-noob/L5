@@ -1,0 +1,24 @@
+<h1>ログイン</h1>
+
+<% if alert.present? %>
+  <p><%= alert %></p>
+<% end %>
+
+<%= form_with url: login_path, method: :post do |form| %>
+  <p>
+    <%= form.label :uid, "ユーザーID" %><br>
+    <%= form.text_field :uid, required: true,
+          autocomplete: "username" %>
+  </p>
+
+  <p>
+    <%= form.label :password, "パスワード" %><br>
+    <%= form.password_field :password, required: true,
+          autocomplete: "current-password" %>
+  </p>
+
+  <%= form.submit "ログイン" %>
+<% end %>
+
+<p><%= link_to "ユーザー登録", new_user_path %></p>
+<p><%= link_to "ツイート一覧へ", root_path %></p>

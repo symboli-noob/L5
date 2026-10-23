@@ -1,7 +1,7 @@
 class TopController < ApplicationController
   def main
     @tweets = Tweet.includes(:user).order(created_at: :desc)
-    @current_user = User.find_by(uid: session[:login_uid])
+    @current_user = current_user
   end
 
   def login_form

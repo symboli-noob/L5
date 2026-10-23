@@ -5,4 +5,19 @@ class Tweet < ApplicationRecord
   has_many :like_users, through: :likes, source: :user
 
   validates :message, presence: true
+
+  # いいねを追加
+  def like(user)
+    likes.create(user_id: user.id)
+  end
+
+  # いいねを解除
+  def unlike(user)
+    likes.find_by(user_id: user.id).destroy
+  end
+
+  # いいね済みか確認
+  def liked?(user)
+    like_users.include?(user)
+  end
 end

@@ -3,10 +3,10 @@ class LikesController < ApplicationController
 
   def create
     tweet = Tweet.find(params[:tweet_id])
-    user = @current_user
 
-    unless user.likes.exists?(tweet_id: tweet.id)
-      user.like_tweets << tweet
+    # いいねしていなければ追加
+    unless tweet.liked?(current_user)
+      tweet.like(current_user)
     end
 
     redirect_to root_path, notice: "いいねしました。"
@@ -16,9 +16,11 @@ class LikesController < ApplicationController
 
   def destroy
     tweet = Tweet.find(params[:id])
-    user = @current_user
 
-    tweet.likes.find_by(user_id: user.id)&.destroy!
+    # いいねしていれば解除
+    if tweet.liked?(current_user)
+      tweet.unlike(current_user)
+    end
 
     redirect_to root_path,
                 notice: "いいねを削除しました。",
@@ -28,9 +30,7 @@ class LikesController < ApplicationController
   private
 
   def require_login
-    @current_user = User.find_by(uid: session[:login_uid])
-
-    unless @current_user
+    unless current_user
       redirect_to login_path, alert: "ログインしてください。"
     end
   end

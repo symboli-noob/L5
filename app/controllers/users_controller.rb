@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   def destroy
     user = User.find(params[:id])
 
-    unless session[:login_uid] == user.uid
+    unless current_user == user
       redirect_to users_path,
                   alert: "ユーザーを削除するには本人のログインが必要です。"
       return
@@ -37,6 +37,6 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:uid, :password)
+    params.require(:user).permit(:uid, :password, :password_confirmation)
   end
 end
